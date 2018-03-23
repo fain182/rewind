@@ -1,0 +1,12 @@
+[ ] separare json e pagina
+[ ] aggiungere test
+[ ] migliorare grafica
+[ ] aggiungere README
+[ ] mettere screenshot
+[ ] pubblicare su github
+
+Idee:
+[ ] filtrare
+[ ] organizzare per canali
+[ ] poterli vedere senza andare su slack
+[ ] mostrare anteprima
