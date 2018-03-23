@@ -1,12 +1,12 @@
-[ ] separare json e pagina
+[ ] dividere per canale
+[ ] mettere filtro ricerca
+[ ] pubblicare su github
+[ ] poterli vedere senza andare su slack
+
 [ ] aggiungere test
 [ ] migliorare grafica
 [ ] aggiungere README
 [ ] mettere screenshot
-[ ] pubblicare su github
 
 Idee:
-[ ] filtrare
-[ ] organizzare per canali
-[ ] poterli vedere senza andare su slack
 [ ] mostrare anteprima
