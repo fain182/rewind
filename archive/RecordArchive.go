@@ -63,7 +63,6 @@ func addMessagesToRecords(records RecordArchive, messages []slack.SearchMessage)
 		// uploaded a file: <https://ideato.slack.com/files/U1KD1QEJ1/F9K5MT0PN/zoom_0.mp4|Registrazione incontro 06/03>
 
 		if isAZoomRecordingMessage(body) {
-			println("added video:" + getTitle(body) + strconv.Itoa(len(records)))
 			records[message.Timestamp] = Record{
 				Title:     getTitle(body),
 				Url:       getUrl(body),
