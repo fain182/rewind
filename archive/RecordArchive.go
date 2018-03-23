@@ -86,7 +86,7 @@ func isAZoomRecordingMessage(messageBody string) bool {
 
 func getTitle(messageBody string) string {
 	beginTitleIndex := strings.Index(messageBody, "|") + 1
-	endTitleIndex := strings.LastIndex(messageBody, ">")
+	endTitleIndex := strings.Index(messageBody, ">")
 	return messageBody[beginTitleIndex:endTitleIndex]
 }
 
