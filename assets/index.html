@@ -9,6 +9,13 @@
         <script type="application/javascript" src="https://unpkg.com/react@16.0.0/umd/react.production.min.js"></script>
         <script type="application/javascript" src="https://unpkg.com/react-dom@16.0.0/umd/react-dom.production.min.js"></script>
         <script type="application/javascript" src="https://unpkg.com/babel-standalone@6.26.0/babel.js"></script>
+        <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.5/lodash.min.js"></script>
+
+        <style>
+            .canale {
+                padding: 5px 20px;
+            }
+        </style>
 
         <title>Rewind: Zoom recordings</title>
     </head>
@@ -31,27 +38,73 @@
             window.recordings = {{ . }};
         </script>
         <script type="text/babel">
-        const rootElement = document.getElementById("app");
+const rootElement = document.getElementById("app");
+
+class Recording extends React.Component {
+    render() {
+        var r = this.props.data;
+        return (
+            <li class="list-group-item">
+                <a href="{ r.Url }" target="_blank">
+                    {r.Title}
+                </a>
+                {" - "}
+                {r.HumanDate}
+            </li>
+        );
+    }
+}
+
+class Channel extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            collapsed: true
+        };
+    }
+    render() {
+        var self = this;
+        var toggleCollapse = () => {
+            self.setState({ collapsed: !this.state.collapsed });
+        };
+
+        var classes = this.state.collapsed ? "collapse" : "list-group";
+
+        return (
+            <div class="canale">
+                <button class="btn btn-primary" onClick={toggleCollapse}>
+                    #{this.props.name}
+                </button>
+                {" Updated " +
+                    this.props.records[0].HumanDate +
+                    " - " +
+                    this.props.records.length +
+                    " recordings"}
+                <ul class={classes}>
+                    {this.props.records.map(record => (
+                        <Recording data={record} />
+                    ))}
+                </ul>
+            </div>
+        );
+    }
+}
 
 class App extends React.Component {
     render() {
+        var recordsByChannel = _.groupBy(this.props.recordings, r => r.Channel);
+
         return (
             <div class="row">
                 <div class="col-sm-12">
-                    <ul class="list-group">
-                        {this.props.recordings.map(record => (
-                            <li class="list-group-item">
-                                <span class="badge badge-primary">
-                                    #{record.Channel}
-                                </span>{" "}
-                                <a href="{ record.Url }" target="_blank">
-                                    {record.Title}
-                                </a>
-                                {" - "}
-                                {record.HumanDate}
-                            </li>
-                        ))}
-                    </ul>
+                    {Object.keys(recordsByChannel).map(function(key) {
+                        return (
+                            <Channel
+                                name={key}
+                                records={recordsByChannel[key]}
+                            />
+                        );
+                    })}
                 </div>
             </div>
         );

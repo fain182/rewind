@@ -1,4 +1,3 @@
-[ ] dividere per canale
 [ ] mettere filtro ricerca
 [ ] pubblicare su github
 [ ] poterli vedere senza andare su slack
