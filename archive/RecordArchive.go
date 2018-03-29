@@ -3,6 +3,7 @@ package archive
 import (
 	"math"
 	"os"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
@@ -57,19 +58,20 @@ func Update(records RecordArchive) {
 
 func addMessagesToRecords(records RecordArchive, messages []slack.SearchMessage) {
 	for i := range messages {
-		message := messages[i]
-		body := message.Text
-		// example body:
-		// uploaded a file: <https://ideato.slack.com/files/U1KD1QEJ1/F9K5MT0PN/zoom_0.mp4|Registrazione incontro 06/03>
+		addMessageToRecords(records, messages[i])
+	}
+}
 
-		if isAZoomRecordingMessage(body) {
-			records[message.Timestamp] = Record{
-				Title:     getTitle(body),
-				Url:       getUrl(body),
-				Channel:   message.Channel.Name,
-				Timestamp: message.Timestamp,
-				HumanDate: getTime(message.Timestamp),
-			}
+func addMessageToRecords(records RecordArchive, message slack.SearchMessage) {
+	body := message.Text
+
+	if isAZoomRecordingMessage(body) {
+		records[message.Timestamp] = Record{
+			Title:     getTitle(body),
+			Url:       getUrl(body),
+			Channel:   message.Channel.Name,
+			Timestamp: message.Timestamp,
+			HumanDate: getTime(message.Timestamp),
 		}
 	}
 }
@@ -87,7 +89,42 @@ func isAZoomRecordingMessage(messageBody string) bool {
 func getTitle(messageBody string) string {
 	beginTitleIndex := strings.Index(messageBody, "|") + 1
 	endTitleIndex := strings.Index(messageBody, ">")
-	return messageBody[beginTitleIndex:endTitleIndex]
+	defaultTitle := messageBody[beginTitleIndex:endTitleIndex]
+
+	if defaultTitle == "zoom_0.mp4" {
+		comment := strings.Trim(removeHandles(getComment(messageBody)), " ")
+		if comment != "" {
+			return comment
+		}
+	}
+
+	return normalizeTitle(defaultTitle)
+}
+
+func getComment(messageBody string) string {
+	commentPrefix := "and commented:"
+	beginCommentIndex := strings.Index(messageBody, commentPrefix)
+
+	if beginCommentIndex == -1 {
+		return ""
+	}
+
+	return messageBody[beginCommentIndex+len(commentPrefix):]
+}
+
+func removeHandles(messageBody string) string {
+	r, _ := regexp.Compile("@\\w+")
+	return r.ReplaceAllString(messageBody, "")
+}
+
+func normalizeTitle(title string) string {
+	title = strings.Replace(title, "_", " ", -1)
+	return removeExtension(title)
+}
+
+func removeExtension(input string) string {
+	r, _ := regexp.Compile("\\.\\w{3}$")
+	return r.ReplaceAllString(input, "")
 }
 
 func getUrl(messageBody string) string {

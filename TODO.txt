@@ -1,9 +1,8 @@
 [ ] poterli vedere senza andare su slack
 [ ] mettere filtro ricerca
 [ ] migliorare query di ricerca (mp4 nella query)
-
 [ ] aggiungere test
-[ ] migliorare grafica
+[ ] usare un tema bootstrap
 [ ] aggiungere README
 [ ] mettere screenshot
 
