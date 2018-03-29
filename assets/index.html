@@ -55,11 +55,13 @@ class Recording extends React.Component {
         var r = this.props.data;
         return (
             <li class="list-group-item">
+                { this.props.showChannel ? (<span><span class="badge badge-secondary">{"#"+r.Channel}</span><br /></span>) : ""}
+
                 <a href={r.Url} target="_blank">
                     {r.Title}
                 </a>
-                {" - "}
-                {r.HumanDate}
+                <br />
+                <small>{r.HumanDate}</small>
             </li>
         );
     }
@@ -102,11 +104,21 @@ class Channel extends React.Component {
 
 class App extends React.Component {
     render() {
+        var latestRecordings = this.props.recordings.slice(0, 15);
         var recordsByChannel = _.groupBy(this.props.recordings, r => r.Channel);
 
         return (
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-sm-6">
+                    <ul class="list-group">
+                        {latestRecordings.map(function(recording) {
+                            return (
+                                <Recording data={recording} showChannel/>
+                            );
+                        })}
+                    </ul>
+                </div>
+                <div class="col-sm-6">
                     {Object.keys(recordsByChannel).map(function(key) {
                         return (
                             <Channel
