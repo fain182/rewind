@@ -1,6 +1,7 @@
 package archive
 
 import (
+	"log"
 	"math"
 	"os"
 	"regexp"
@@ -40,7 +41,7 @@ func Update(records RecordArchive) {
 	messages, err := downloadMessageByPage(api, 0)
 	addMessagesToRecords(records, messages.Matches)
 	if nil != err {
-		println(err.Error())
+		log.Println(err.Error())
 		return
 	}
 
@@ -48,7 +49,7 @@ func Update(records RecordArchive) {
 		time.Sleep(3 * time.Second)
 		nextMessages, err := downloadMessageByPage(api, i)
 		if nil != err {
-			println(err.Error())
+			log.Println(err.Error())
 			continue
 		}
 		addMessagesToRecords(records, nextMessages.Matches)

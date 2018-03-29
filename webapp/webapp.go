@@ -17,7 +17,7 @@ func Serve(records archive.RecordArchive) {
 	homepageHandlerWithAuthentication := httpauth.SimpleBasicAuth(os.Getenv("USER"), os.Getenv("PASSWORD"))(homepageHandler)
 	http.Handle("/", homepageHandlerWithAuthentication)
 
-	println("Listening on http://localhost:8080")
+	log.Println("Listening on http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
@@ -29,7 +29,7 @@ func homepage(records archive.RecordArchive, w http.ResponseWriter, r *http.Requ
 
 	jsonRecordings, err := json.Marshal(archive.SortRecords(records))
 	if err != nil {
-		println(err)
+		log.Println(err)
 	} else {
 		t.Execute(w, template.JS(string(jsonRecordings)))
 	}
