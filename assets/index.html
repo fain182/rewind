@@ -23,7 +23,7 @@
 
         <style>
             .canale {
-                padding: 5px 20px;
+                padding: 5px 0px;
             }
         </style>
 
@@ -110,6 +110,7 @@ class App extends React.Component {
         return (
             <div class="row">
                 <div class="col-sm-6">
+                    <h2>Latest videos</h2>
                     <ul class="list-group">
                         {latestRecordings.map(function(recording) {
                             return (
@@ -119,6 +120,7 @@ class App extends React.Component {
                     </ul>
                 </div>
                 <div class="col-sm-6">
+                    <h2>By Channel</h2>
                     {Object.keys(recordsByChannel).map(function(key) {
                         return (
                             <Channel
