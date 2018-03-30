@@ -27,7 +27,7 @@ func homepage(recordings storage.Recordings, w http.ResponseWriter, r *http.Requ
 		panic(err)
 	}
 
-	jsonRecordings, err := json.Marshal(storage.SortRecordings(recordings))
+	jsonRecordings, err := json.Marshal(recordings.Sort())
 	if err != nil {
 		log.Println(err)
 	} else {

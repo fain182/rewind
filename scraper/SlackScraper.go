@@ -2,14 +2,11 @@ package scraper
 
 import (
 	"log"
-	"math"
 	"os"
 	"regexp"
-	"strconv"
 	"strings"
 	"time"
 
-	humanize "github.com/dustin/go-humanize"
 	"github.com/fain182/rewind/storage"
 	"github.com/nlopes/slack"
 )
@@ -46,13 +43,7 @@ func addMessageToRecordings(recordings storage.Recordings, message slack.SearchM
 	body := message.Text
 
 	if isAZoomRecordingMessage(body) {
-		recordings[message.Timestamp] = storage.Recording{
-			Title:     parseTitle(body),
-			Url:       parseUrl(body),
-			Channel:   message.Channel.Name,
-			Timestamp: message.Timestamp,
-			HumanDate: parseFloatTimestamp(message.Timestamp),
-		}
+		recordings.Add(parseTitle(body), parseUrl(body), message.Channel.Name, message.Timestamp)
 	}
 }
 
@@ -63,7 +54,7 @@ func downloadMessageByPage(api *slack.Client, pageNumber int) (*slack.SearchMess
 }
 
 func isAZoomRecordingMessage(messageBody string) bool {
-	return strings.Contains(messageBody, "mp4") || strings.Contains(messageBody, "m4a")
+	return strings.Contains(messageBody, ".mp4") || strings.Contains(messageBody, ".m4a")
 }
 
 func parseTitle(messageBody string) string {
@@ -111,15 +102,4 @@ func parseUrl(messageBody string) string {
 	beginTitleIndex := strings.Index(messageBody, "<") + 1
 	endTitleIndex := strings.LastIndex(messageBody, "|")
 	return messageBody[beginTitleIndex:endTitleIndex]
-}
-
-func parseFloatTimestamp(timestamp string) string {
-	timeFloat, err := strconv.ParseFloat(timestamp, 64)
-	if err != nil {
-		panic(err)
-	}
-	sec, dec := math.Modf(timeFloat)
-	uploadedAt := time.Unix(int64(sec), int64(dec*(1e9)))
-
-	return humanize.Time(uploadedAt)
 }
