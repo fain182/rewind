@@ -1,45 +1,24 @@
-package archive
+package scraper
 
 import (
 	"log"
 	"math"
 	"os"
 	"regexp"
-	"sort"
 	"strconv"
 	"strings"
 	"time"
 
 	humanize "github.com/dustin/go-humanize"
+	"github.com/fain182/rewind/storage"
 	"github.com/nlopes/slack"
 )
 
-type RecordArchive map[string]Record
-
-type Record struct {
-	Title     string
-	Url       string
-	Channel   string
-	Timestamp string
-	HumanDate string
-}
-
-func SortRecords(records RecordArchive) []Record {
-	recordList := make([]Record, 0)
-	for _, record := range records {
-		recordList = append(recordList, record)
-	}
-	sort.Slice(recordList[:], func(i, j int) bool {
-		return recordList[i].Timestamp > recordList[j].Timestamp
-	})
-	return recordList
-}
-
-func Update(records RecordArchive) {
+func Update(recordings storage.Recordings) {
 	api := slack.New(os.Getenv("SLACK_API_KEY"))
 
 	messages, err := downloadMessageByPage(api, 0)
-	addMessagesToRecords(records, messages.Matches)
+	addMessagesToRecordings(recordings, messages.Matches)
 	if nil != err {
 		log.Println(err.Error())
 		return
@@ -52,22 +31,22 @@ func Update(records RecordArchive) {
 			log.Println(err.Error())
 			continue
 		}
-		addMessagesToRecords(records, nextMessages.Matches)
+		addMessagesToRecordings(recordings, nextMessages.Matches)
 	}
 
 }
 
-func addMessagesToRecords(records RecordArchive, messages []slack.SearchMessage) {
+func addMessagesToRecordings(recordings storage.Recordings, messages []slack.SearchMessage) {
 	for i := range messages {
-		addMessageToRecords(records, messages[i])
+		addMessageToRecordings(recordings, messages[i])
 	}
 }
 
-func addMessageToRecords(records RecordArchive, message slack.SearchMessage) {
+func addMessageToRecordings(recordings storage.Recordings, message slack.SearchMessage) {
 	body := message.Text
 
 	if isAZoomRecordingMessage(body) {
-		records[message.Timestamp] = Record{
+		recordings[message.Timestamp] = storage.Recording{
 			Title:     getTitle(body),
 			Url:       getUrl(body),
 			Channel:   message.Channel.Name,

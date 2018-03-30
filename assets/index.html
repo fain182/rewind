@@ -88,13 +88,13 @@ class Channel extends React.Component {
                     #{this.props.name}
                 </button>
                 {" Updated " +
-                    this.props.records[0].HumanDate +
+                    this.props.recordings[0].HumanDate +
                     " - " +
-                    this.props.records.length +
+                    this.props.recordings.length +
                     " recordings"}
                 <ul class={classes}>
-                    {this.props.records.map(record => (
-                        <Recording data={record} />
+                    {this.props.recordings.map(recording => (
+                        <Recording data={recording} />
                     ))}
                 </ul>
             </div>
@@ -105,7 +105,7 @@ class Channel extends React.Component {
 class App extends React.Component {
     render() {
         var latestRecordings = this.props.recordings.slice(0, 15);
-        var recordsByChannel = _.groupBy(this.props.recordings, r => r.Channel);
+        var recordingsByChannel = _.groupBy(this.props.recordings, r => r.Channel);
 
         return (
             <div class="row">
@@ -121,11 +121,11 @@ class App extends React.Component {
                 </div>
                 <div class="col-sm-6">
                     <h2>By Channel</h2>
-                    {Object.keys(recordsByChannel).map(function(key) {
+                    {Object.keys(recordingsByChannel).map(function(key) {
                         return (
                             <Channel
                                 name={key}
-                                records={recordsByChannel[key]}
+                                recordings={recordingsByChannel[key]}
                             />
                         );
                     })}

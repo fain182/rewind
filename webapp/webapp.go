@@ -8,12 +8,12 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/fain182/rewind/archive"
+	"github.com/fain182/rewind/storage"
 	"github.com/goji/httpauth"
 )
 
-func Serve(records archive.RecordArchive) {
-	homepageHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { homepage(records, w, r) })
+func Serve(recordings storage.Recordings) {
+	homepageHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { homepage(recordings, w, r) })
 	homepageHandlerWithAuthentication := httpauth.SimpleBasicAuth(os.Getenv("USER"), os.Getenv("PASSWORD"))(homepageHandler)
 	http.Handle("/", homepageHandlerWithAuthentication)
 
@@ -21,13 +21,13 @@ func Serve(records archive.RecordArchive) {
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
-func homepage(records archive.RecordArchive, w http.ResponseWriter, r *http.Request) {
+func homepage(recordings storage.Recordings, w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles(getAssetsPath() + "/index.html")
 	if err != nil {
 		panic(err)
 	}
 
-	jsonRecordings, err := json.Marshal(archive.SortRecords(records))
+	jsonRecordings, err := json.Marshal(storage.SortRecordings(recordings))
 	if err != nil {
 		log.Println(err)
 	} else {

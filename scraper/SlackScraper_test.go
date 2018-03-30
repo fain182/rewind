@@ -1,26 +1,27 @@
-package archive
+package scraper
 
 import (
 	"testing"
 
+	"github.com/fain182/rewind/storage"
 	"github.com/nlopes/slack"
 )
 
 func TestAddOneMessageToRecordings(t *testing.T) {
-	records := make(RecordArchive)
+	recordings := make(storage.Recordings)
 	message := slack.SearchMessage{
 		Text:      "uploaded a file: <https://ideato.slack.com/files/U1KD1QEJ1/F9K5MT0PN/zoom_0.mp4|Registrazione incontro 06/03>",
 		Timestamp: "1508795665.000236",
 		Channel:   slack.CtxChannel{"123", "canale"},
 	}
 
-	addMessageToRecords(records, message)
+	addMessageToRecordings(recordings, message)
 
-	if len(records) != 1 {
-		t.Error("Expected 1 results, got ", len(records))
+	if len(recordings) != 1 {
+		t.Error("Expected 1 results, got ", len(recordings))
 	}
 
-	r := records[message.Timestamp]
+	r := recordings[message.Timestamp]
 
 	if r.Channel != "canale" {
 		t.Error("Expected 'canale', got ", r.Channel)

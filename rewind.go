@@ -3,17 +3,18 @@ package main
 import (
 	"time"
 
-	"github.com/fain182/rewind/archive"
+	"github.com/fain182/rewind/scraper"
+	"github.com/fain182/rewind/storage"
 	"github.com/fain182/rewind/webapp"
 )
 
-var records archive.RecordArchive
+var recordings storage.Recordings
 
 func main() {
-	records = make(archive.RecordArchive)
-	go webapp.Serve(records)
+	recordings = make(storage.Recordings)
+	go webapp.Serve(recordings)
 	for {
-		go archive.Update(records)
+		go scraper.Update(recordings)
 		time.Sleep(30 * time.Minute)
 	}
 }
