@@ -57,7 +57,7 @@ func TestTitleParsing(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		actualTitle := getTitle(c.Body)
+		actualTitle := parseTitle(c.Body)
 		if actualTitle != c.ExpectedTitle {
 			t.Error("Expected '", c.ExpectedTitle, "', got ", actualTitle)
 		}

@@ -47,11 +47,11 @@ func addMessageToRecordings(recordings storage.Recordings, message slack.SearchM
 
 	if isAZoomRecordingMessage(body) {
 		recordings[message.Timestamp] = storage.Recording{
-			Title:     getTitle(body),
-			Url:       getUrl(body),
+			Title:     parseTitle(body),
+			Url:       parseUrl(body),
 			Channel:   message.Channel.Name,
 			Timestamp: message.Timestamp,
-			HumanDate: getTime(message.Timestamp),
+			HumanDate: parseFloatTimestamp(message.Timestamp),
 		}
 	}
 }
@@ -66,13 +66,13 @@ func isAZoomRecordingMessage(messageBody string) bool {
 	return strings.Contains(messageBody, "mp4") || strings.Contains(messageBody, "m4a")
 }
 
-func getTitle(messageBody string) string {
+func parseTitle(messageBody string) string {
 	beginTitleIndex := strings.Index(messageBody, "|") + 1
 	endTitleIndex := strings.Index(messageBody, ">")
 	defaultTitle := messageBody[beginTitleIndex:endTitleIndex]
 
 	if defaultTitle == "zoom_0.mp4" {
-		comment := strings.Trim(removeHandles(getComment(messageBody)), " ")
+		comment := strings.Trim(removeHandles(parseComment(messageBody)), " ")
 		if comment != "" {
 			return comment
 		}
@@ -81,7 +81,7 @@ func getTitle(messageBody string) string {
 	return normalizeTitle(defaultTitle)
 }
 
-func getComment(messageBody string) string {
+func parseComment(messageBody string) string {
 	commentPrefix := "and commented:"
 	beginCommentIndex := strings.Index(messageBody, commentPrefix)
 
@@ -92,9 +92,9 @@ func getComment(messageBody string) string {
 	return messageBody[beginCommentIndex+len(commentPrefix):]
 }
 
-func removeHandles(messageBody string) string {
+func removeHandles(input string) string {
 	r, _ := regexp.Compile("@\\w+")
-	return r.ReplaceAllString(messageBody, "")
+	return r.ReplaceAllString(input, "")
 }
 
 func normalizeTitle(title string) string {
@@ -107,13 +107,13 @@ func removeExtension(input string) string {
 	return r.ReplaceAllString(input, "")
 }
 
-func getUrl(messageBody string) string {
+func parseUrl(messageBody string) string {
 	beginTitleIndex := strings.Index(messageBody, "<") + 1
 	endTitleIndex := strings.LastIndex(messageBody, "|")
 	return messageBody[beginTitleIndex:endTitleIndex]
 }
 
-func getTime(timestamp string) string {
+func parseFloatTimestamp(timestamp string) string {
 	timeFloat, err := strconv.ParseFloat(timestamp, 64)
 	if err != nil {
 		panic(err)
