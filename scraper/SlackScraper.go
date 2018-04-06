@@ -15,14 +15,14 @@ import (
 func Update(recordings storage.Recordings) {
 	api := slack.New(os.Getenv("SLACK_API_KEY"))
 
-	messages, err := downloadMessageByPage(api, 0)
-	addMessagesToRecordings(recordings, messages.Matches)
+	fileMessages, err := downloadMessageByPage(api, 0)
+	addMessagesToRecordings(recordings, fileMessages.Matches)
 	if nil != err {
 		log.Println(err.Error())
 		return
 	}
 
-	for i := 1; i < messages.PageCount; i++ {
+	for i := 1; i < fileMessages.PageCount; i++ {
 		time.Sleep(3 * time.Second)
 		nextMessages, err := downloadMessageByPage(api, i)
 		if nil != err {
@@ -34,24 +34,24 @@ func Update(recordings storage.Recordings) {
 
 }
 
-func addMessagesToRecordings(recordings storage.Recordings, messages []slack.SearchMessage) {
+func addMessagesToRecordings(recordings storage.Recordings, messages []slack.File) {
 	for i := range messages {
 		addMessageToRecordings(recordings, messages[i])
 	}
 }
 
-func addMessageToRecordings(recordings storage.Recordings, message slack.SearchMessage) {
-	body := message.Text
-
-	if isAZoomRecordingMessage(body) {
-		recordings.Add(parseTitle(body), parseURL(body), message.Channel.Name, message.Timestamp)
+func addMessageToRecordings(recordings storage.Recordings, message slack.File) {
+	channel := "[None]"
+	if len(message.Channels) > 0 {
+		channel = message.Channels[0]
 	}
+	recordings.Add(message.Title, message.URLPrivate, channel, message.Created.Time())
 }
 
-func downloadMessageByPage(api *slack.Client, pageNumber int) (*slack.SearchMessages, error) {
+func downloadMessageByPage(api *slack.Client, pageNumber int) (*slack.SearchFiles, error) {
 	params := slack.NewSearchParameters()
 	params.Page = pageNumber
-	return api.SearchMessages("\"uploaded a file\"", params)
+	return api.SearchFiles("mp4", params)
 }
 
 func isAZoomRecordingMessage(messageBody string) bool {

@@ -9,26 +9,30 @@ import (
 	humanize "github.com/dustin/go-humanize"
 )
 
+// Recordings is the media collection
 type Recordings map[string]Recording
 
+// A Recording is a media uploaded to slack
 type Recording struct {
 	Title     string
-	Url       string
+	URL       string
 	Channel   string
 	Timestamp string
 	HumanDate string
 }
 
-func (recordings Recordings) Add(title, url, channel, timestamp string) {
-	recordings[timestamp] = Recording{
+// Add a recording to the collection
+func (recordings Recordings) Add(title, url, channel string, created time.Time) {
+	recordings[strconv.FormatInt(created.UnixNano(), 10)] = Recording{
 		Title:     title,
-		Url:       url,
+		URL:       url,
 		Channel:   channel,
-		Timestamp: timestamp,
-		HumanDate: parseFloatTimestamp(timestamp),
+		Timestamp: strconv.FormatInt(created.Unix(), 10),
+		HumanDate: humanize.Time(created),
 	}
 }
 
+// Sort the recordings by creation date
 func (recordings Recordings) Sort() []Recording {
 	recordingList := make([]Recording, 0)
 	for _, recording := range recordings {

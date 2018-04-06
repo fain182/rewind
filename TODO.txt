@@ -1,3 +1,6 @@
+[ ] fix mp4 or m4a
+[ ] fix channels
+[ ] fix tests
 [ ] poterli vedere senza andare su slack
 [ ] mettere filtro ricerca
 [ ] migliorare query di ricerca (mp4 nella query)
@@ -6,3 +9,4 @@
 [ ] aggiungere README
 [ ] mettere screenshot
 [ ] mostrare anteprima
+[ ] support for handling HTTP status code 429 (Too Many Requests)
