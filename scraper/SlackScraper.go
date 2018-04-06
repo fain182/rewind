@@ -11,6 +11,7 @@ import (
 	"github.com/nlopes/slack"
 )
 
+// Update downloads recordings from slack and add them to storage
 func Update(recordings storage.Recordings) {
 	api := slack.New(os.Getenv("SLACK_API_KEY"))
 
@@ -43,7 +44,7 @@ func addMessageToRecordings(recordings storage.Recordings, message slack.SearchM
 	body := message.Text
 
 	if isAZoomRecordingMessage(body) {
-		recordings.Add(parseTitle(body), parseUrl(body), message.Channel.Name, message.Timestamp)
+		recordings.Add(parseTitle(body), parseURL(body), message.Channel.Name, message.Timestamp)
 	}
 }
 
@@ -98,7 +99,7 @@ func removeExtension(input string) string {
 	return r.ReplaceAllString(input, "")
 }
 
-func parseUrl(messageBody string) string {
+func parseURL(messageBody string) string {
 	beginTitleIndex := strings.Index(messageBody, "<") + 1
 	endTitleIndex := strings.LastIndex(messageBody, "|")
 	return messageBody[beginTitleIndex:endTitleIndex]

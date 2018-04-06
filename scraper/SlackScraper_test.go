@@ -12,7 +12,7 @@ func TestAddOneMessageToRecordings(t *testing.T) {
 	message := slack.SearchMessage{
 		Text:      "uploaded a file: <https://ideato.slack.com/files/U1KD1QEJ1/F9K5MT0PN/zoom_0.mp4|Registrazione incontro 06/03>",
 		Timestamp: "1508795665.000236",
-		Channel:   slack.CtxChannel{"123", "canale"},
+		Channel:   slack.CtxChannel{ID: "123", Name: "Canale"},
 	}
 
 	addMessageToRecordings(recordings, message)

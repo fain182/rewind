@@ -5,6 +5,4 @@
 [ ] usare un tema bootstrap
 [ ] aggiungere README
 [ ] mettere screenshot
-
-Idee:
 [ ] mostrare anteprima
