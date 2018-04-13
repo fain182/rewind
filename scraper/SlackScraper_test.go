@@ -37,31 +37,3 @@ func TestAddOneMessageToRecordings(t *testing.T) {
 		t.Error("Expected 'https://ideato.slack.com/files/U1KD1QEJ1/F9K5MT0PN/zoom_0.mp4', got ", r.URL)
 	}
 }
-
-func TestTitleParsing(t *testing.T) {
-	cases := []struct{ Body, ExpectedTitle string }{
-		{
-			"uploaded a file: <https://ideato.slack.com/files/U1KD1QEJ1/F9K5MT0PN/zoom_0.mp4|Registrazione incontro 06/03>",
-			"Registrazione incontro 06/03",
-		},
-		{
-			"uploaded a file: <https://ideato.slack.com/files/U024HSKKW/F8YHNGHCZ/zoom_0.mp4|zoom_0.mp4> and commented: @channel ecco la registrazione del lean coffee",
-			"ecco la registrazione del lean coffee",
-		},
-		{
-			"uploaded a file: <https://ideato.slack.com/files/U024HSKKW/F8YHNGHCZ/zoom_0.mp4|zoom_0.mp4>",
-			"zoom 0",
-		},
-		{
-			"uploaded a file: <https://ideato.slack.com/files/U024HSKKW/F8YHNGHCZ/common_language.m4a|common_language.m4a>",
-			"common language",
-		},
-	}
-
-	for _, c := range cases {
-		actualTitle := parseTitle(c.Body)
-		if actualTitle != c.ExpectedTitle {
-			t.Error("Expected '", c.ExpectedTitle, "', got ", actualTitle)
-		}
-	}
-}
