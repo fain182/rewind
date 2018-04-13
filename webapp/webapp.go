@@ -12,6 +12,7 @@ import (
 	"github.com/goji/httpauth"
 )
 
+// Serve start the webserver to show recordings data
 func Serve(recordings storage.Recordings) {
 	homepageHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { homepage(recordings, w, r) })
 	homepageHandlerWithAuthentication := httpauth.SimpleBasicAuth(os.Getenv("USER"), os.Getenv("PASSWORD"))(homepageHandler)
