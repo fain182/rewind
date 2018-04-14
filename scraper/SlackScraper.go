@@ -14,8 +14,12 @@ import (
 // Update downloads recordings from slack and add them to storage
 func Update(recordings storage.Recordings) {
 	api := slack.New(os.Getenv("SLACK_API_KEY"))
+	searchFilesAndAddToRecordings(api, recordings, "mp4")
+	searchFilesAndAddToRecordings(api, recordings, "m4a")
+}
 
-	fileMessages, err := downloadMessageByPage(api, 0)
+func searchFilesAndAddToRecordings(api *slack.Client, recordings storage.Recordings, query string) {
+	fileMessages, err := downloadMessageByPage(api, query, 0)
 	addMessagesToRecordings(recordings, fileMessages.Matches)
 	if nil != err {
 		log.Println(err.Error())
@@ -24,14 +28,13 @@ func Update(recordings storage.Recordings) {
 
 	for i := 1; i < fileMessages.PageCount; i++ {
 		time.Sleep(3 * time.Second)
-		nextMessages, err := downloadMessageByPage(api, i)
+		nextMessages, err := downloadMessageByPage(api, query, i)
 		if nil != err {
 			log.Println(err.Error())
 			continue
 		}
 		addMessagesToRecordings(recordings, nextMessages.Matches)
 	}
-
 }
 
 func addMessagesToRecordings(recordings storage.Recordings, messages []slack.File) {
@@ -48,10 +51,10 @@ func addMessageToRecordings(recordings storage.Recordings, message slack.File) {
 	recordings.Add(normalizeTitle(message.Title), message.URLPrivate, channel, message.Created.Time())
 }
 
-func downloadMessageByPage(api *slack.Client, pageNumber int) (*slack.SearchFiles, error) {
+func downloadMessageByPage(api *slack.Client, query string, pageNumber int) (*slack.SearchFiles, error) {
 	params := slack.NewSearchParameters()
 	params.Page = pageNumber
-	return api.SearchFiles("mp4", params)
+	return api.SearchFiles(query, params)
 }
 
 func normalizeTitle(title string) string {
