@@ -1,3 +1,5 @@
+[ ] avvisare l'utente quando non è loggato su slack
+[ ] cambiare da position fixed a position absolute
 [ ] fix channels (wait slack API fix)
 [ ] mettere filtro ricerca
 [ ] usare un tema bootstrap

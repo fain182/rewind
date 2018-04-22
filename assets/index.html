@@ -38,6 +38,14 @@
             height: 100%;
             padding: 5%;
         }
+
+        audio {
+            width: 100%;
+        }
+
+        video {
+            width: 800px;
+        }
     </style>
 
     <title>Rewind: Zoom recordings</title>
@@ -74,8 +82,8 @@ class Player extends React.Component{
             <button class="btn btn-primary" onClick={closePlayer}>Back to the list</button>                                        
                     <h1>{r.Title}</h1>
                     { r.URL.endsWith(".mp4") ?
-                        (<video src={r.URL} width="100%" />) :
-                        (<audio src={r.URL} width="100%" />)
+                        (<video autoplay controls src={r.URL}/>) :
+                        (<audio autoplay controls src={r.URL}/>)
                     }
                 </div>);
     }
