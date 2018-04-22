@@ -1,6 +1,4 @@
-[ ] fix mp4 or m4a
 [ ] fix channels (wait slack API fix)
-[ ] poterli vedere senza andare su slack
 [ ] mettere filtro ricerca
 [ ] usare un tema bootstrap
 [ ] aggiungere README
