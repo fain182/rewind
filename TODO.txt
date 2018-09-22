@@ -1,4 +1,3 @@
-[ ] mettere file.list al posto di file.search (fix channels slack bug)
 [ ] avvisare l'utente quando non è loggato su slack
 [ ] cambiare da position fixed a position absolute
 [ ] release v2

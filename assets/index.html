@@ -86,7 +86,7 @@ class Player extends React.Component{
             <button class="btn btn-primary" onClick={closePlayer}>Back to the list</button>                                        
                     <h1>{r.Title}</h1>
                     { r.URL.endsWith(".mp4") ?
-                        (<video autoplay controls src={r.URL}/>) :
+                        (<video preload="auto" controls src={r.URL}/>) :
                         (<audio autoplay controls src={r.URL}/>)
                     }
                 </div>);
