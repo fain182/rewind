@@ -17,7 +17,7 @@
     <script type="application/javascript" async src="https://www.googletagmanager.com/gtag/js?id=UA-116541071-1"></script>
     <script type="application/javascript">
         window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
+        function gtag() {dataLayer.push(arguments);}
         gtag('js', new Date());
 
         gtag('config', 'UA-116541071-1');
@@ -45,6 +45,10 @@
 
         video {
             width: 800px;
+        }
+
+        .video-title {
+            cursor: pointer;
         }
     </style>
 
@@ -111,7 +115,7 @@ class Recording extends React.Component {
             <li class="list-group-item">
                 { this.props.showChannel ? (<span><span class="badge badge-secondary">{"#"+r.Channel}</span>&nbsp;{media}<br /></span>) : ""}
                 { this.state.showPlayer ? (<Player recording={r} close={togglePlayer}/>) : null}
-                <span onClick={togglePlayer}>
+                <span className="video-title" onClick={togglePlayer}>
                     {r.Title}
                 </span>
                 <br />

@@ -1,9 +1,13 @@
+[ ] mettere file.list al posto di file.search (fix channels slack bug)
 [ ] avvisare l'utente quando non è loggato su slack
 [ ] cambiare da position fixed a position absolute
-[ ] fix channels (wait slack API fix)
-[ ] mettere filtro ricerca
+[ ] release v2
+
 [ ] usare un tema bootstrap
+[ ] aggiungere routing
 [ ] aggiungere README
 [ ] mettere screenshot
+
+[ ] mettere filtro ricerca
 [ ] mostrare anteprima
 [ ] support for handling HTTP status code 429 (Too Many Requests)
