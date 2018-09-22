@@ -110,10 +110,17 @@ class Recording extends React.Component {
         var r = this.props.data;
         
         var media = r.URL.endsWith(".mp4") ? <span class="badge badge-success">Video</span> : <span class="badge badge-warning">Audio</span>;
+        var grey = {color: "#999"};
+        var channelRow = (
+            <div className="d-flex w-100 justify-content-between">
+                <h5 className="mb-1"><span style={grey}>#</span>{r.Channel} </h5>
+                { media }
+            </div>
+        );
 
         return (
-            <li class="list-group-item">
-                { this.props.showChannel ? (<span><span class="badge badge-secondary">{"#"+r.Channel}</span>&nbsp;{media}<br /></span>) : ""}
+            <li className="list-group-item">
+                { this.props.showChannel ? channelRow : ""}
                 { this.state.showPlayer ? (<Player recording={r} close={togglePlayer}/>) : null}
                 <span className="video-title" onClick={togglePlayer}>
                     {r.Title}
